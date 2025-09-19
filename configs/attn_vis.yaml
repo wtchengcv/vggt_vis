@@ -1,0 +1,43 @@
+# 哪些可视化启用
+viz:
+  attn_heatmaps: false           # 调 save_attn_heatmaps_from_records（叠加到原图）
+  patchmap: true                # 调 save_frame_to_frame_patchmap_auto（frame↔frame 子矩阵）
+
+# 抓取 attention 的方式
+capture:
+  which: ["global"]             # 或 ["frame","global"]
+  # all模式慎用，会抓取所有token的attention，内存占用大
+  queries: "all"                # "all" | "cam" | "cam+reg" | "indices"
+  query_indices: [8000]             # queries="indices" 时生效，如 [3000, 5000]
+  block_indices:
+    global: [0, 6, 15, 18, 22]  # 抓取哪些 global blocks
+    frame: []                   # 抓取哪些 frame  blocks
+
+# 可视化通用设置
+vis:
+  out_dir: "./attn_vis"
+  which_frames: "all"           # "all" 或 [0,2,8,10]
+  overlay_query: true
+  draw_query_on_main: true
+  draw_inset: false
+  colormap: "viridis"           # "viridis" | "turbo" | "jet" | "bcy" (蓝→青→黄)
+  vmax_percentile: 99.5   #这个不生效应该
+
+# patchmap 专用
+patchmap:
+  rows_norm: true
+  draw_ticks: true
+  pairs:                        # 列表：每个元素指定 {prefix, blk, fq, ft}
+    - { prefix: "global", blk: 15, fq: 0, ft: 0 }
+    # - { prefix: "frame",  blk: 11, fq: 3, ft: 3 }
+
+# 运行/模型
+run:
+  use_point_map: false
+  mask_sky: false
+  port: 8080
+
+# 方便指定数据路径
+data:
+  image_folder: "examples/kitchen_short/images/"
+  weights_path: "/home/wentaocheng/Documents/model_zoo/vggt.pt"
